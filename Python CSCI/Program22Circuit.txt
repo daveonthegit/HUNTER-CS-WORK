@@ -1,0 +1,6 @@
+#Name: David Xiao
+#Email: david.xiao67@myhunter.cuny.edu
+#Date: 09/18/2022
+#Program #22:  3 inputs.
+
+out = ((in1 and in2) or in3)
