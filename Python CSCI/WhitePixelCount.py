@@ -6,11 +6,11 @@
 #Import the packages for images and arrays:
 import matplotlib.pyplot as plt
 import numpy as np
-
-
+import os
+print(os.getcwd())
 ca = plt.imread(input('Enter file name: '))   #Read in image
 countSnow = 0            #Number of pixels that are almost white
-t = input('Enter threshold: ')                 #Threshold for almost white-- can adjust between 0.0 and 1.0
+t = float(input('Enter threshold: '))                 #Threshold for almost white-- can adjust between 0.0 and 1.0
 
 #For every pixel:
 for i in range(ca.shape[0]):
@@ -18,6 +18,5 @@ for i in range(ca.shape[0]):
           #Check if red, green, and blue are > t:
           if (ca[i,j,0] > t) and (ca[i,j,1] > t) and (ca[i,j,2] > t):
                countSnow = countSnow + 1
-
 print("number of white pixels: ", countSnow)
-print('percent of white pixels: ', float(countSnow/len(ca.shape[0])*len(ca.shape[1])), ' %')
+print('percent of white pixels: ', "{0:.2%}".format(float(countSnow/(ca.shape[0]*ca.shape[1]))))

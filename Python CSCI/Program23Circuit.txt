@@ -3,4 +3,4 @@
 #Date: 09/18/2022
 #Program #23:  Logic circuit 
 
-out = ((in1 and in2) or (in2 nor in3))
+out = ((in1 and in2) or not (in2 or in3))
