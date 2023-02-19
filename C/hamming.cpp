@@ -2,7 +2,7 @@
 Author: David Xiao
 Course: CSCI-135
 Instructor: Sadab Hafiz
-Assignment: Project 2 B
+Assignment: Project 2 C
 
 Hamming, Checks two dna strands to see if there are differences, then returns # of diff, and if codons changed.
 */
