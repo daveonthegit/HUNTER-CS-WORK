@@ -9,12 +9,16 @@ using namespace std;
 
 
 bool isDivisibleBy(int n, int d){
+    if(d==0)
+        return false;
     if(n%d==0)
         return true;
     else
         return false;
 }
 bool isPrime(int n){
+    if (n <2)
+        return false;
     for (int i =2;i<n;i++){
         if(isDivisibleBy(n,i))
             return false;
