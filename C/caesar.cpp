@@ -12,31 +12,29 @@ Caesar shifts a string using a shift index
 using namespace std;
 
 char shiftChar(char c, int rshift){
-    int shiftval = int(c);
-    if(isupper(c)){
-        shiftval-=65;
-        shiftval+=rshift;
-        if(shiftval>25)
-            shiftval-=25;
-        shiftval+=65;
-    }else{
-        shiftval-=97;
-        shiftval+=rshift;
-        if(shiftval>25)
-            shiftval-=25;
-        shiftval+=97; 
+    if(isalpha(c)){
+        if(isupper(c)){
+            c-=65;
+            c+=rshift;
+            if(c>25)
+                c-=26;
+            c+=65;
+        }else{
+            c-=97;
+            c+=rshift;
+            if(c>25)
+                c-=26;
+            c+=97; 
+        }
     }
 
-    return char(shiftval);
+    return c;
 }
 
 string encryptCaesar(string plaintext, int rshift){
     string shifttext="";
     for (auto c:plaintext){
-        if(isalpha(c))
-            shifttext+=shiftChar(c,rshift);
-        else   
-            shifttext+=c;
+        shifttext+=shiftChar(c,rshift);
     }
     return shifttext;
 }
