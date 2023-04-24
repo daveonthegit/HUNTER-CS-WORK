@@ -11,22 +11,29 @@ Dynamically Allocated Playlists
 #include <fstream>
 #include <string>
 using namespace std;
+int g_capacity = 2;
+int g_size = 0;
+class Song{
+    public:
+        string name;
+        string artist;
+        int duration;
+        string genre;
+        
+    private:
 
-int g_curr_size = 2;
-int g_number_of_songs = 0;
+};
 
-string *g_song_names = new string[g_curr_size];
-string *g_artist_names = new string[g_curr_size];
-int *g_song_durations = new int[g_curr_size];
-string *g_genres = new string[g_curr_size];
+Song *g_songs = new Song[g_capacity];
+
 
 /*
     @post             :   Replace the old global
                           dynamically allocated arrays
                           with new dynamically allocated
                           arrays of twice the size 
-                          ('g_curr_size' * 2). Update
-                          'g_curr_size' accordingly.
+                          ('g_capacity' * 2). Update
+                          'g_capacity' accordingly.
                           Make sure you copy the contents
                           of the older arrays. Do this
                           for the following global-arrays:
@@ -34,25 +41,13 @@ string *g_genres = new string[g_curr_size];
                           'g_song_durations', 'g_genres'
 */
 void allocateNew(){
-    string* g_song_names_temp = new string[g_curr_size*2];
-    string* g_artist_names_temp = new string[g_curr_size*2];
-    int* g_song_durations_temp = new int[g_curr_size*2];
-    string* g_genres_temp = new string[g_curr_size*2];
-    for(int i= 0 ; i<g_curr_size;i++){
-        g_song_names_temp[i] = g_song_names[i];
-        g_artist_names_temp[i] = g_artist_names[i];
-        g_song_durations_temp[i] = g_song_durations[i];
-        g_genres_temp[i]=g_genres[i];
+    Song* tempsongs = new Song[g_capacity*2];
+    for(int i= 0 ; i<g_capacity;i++){
+        tempsongs[i] = g_songs[i];
     }
-    delete[] g_song_names;
-    delete[] g_artist_names;
-    delete[] g_song_durations;
-    delete[] g_genres;
-    g_song_names = g_song_names_temp;
-    g_artist_names = g_artist_names_temp;
-    g_song_durations = g_song_durations_temp;
-    g_genres = g_genres_temp;
-    g_curr_size*=2;
+    delete[] g_songs;
+    g_songs = tempsongs;
+    g_capacity*=2;
 }
 
 /*
@@ -60,7 +55,7 @@ void allocateNew(){
     @post             :   Reads the song, artists,
                           song durations and genres into 
                           the global-arrays and set the 
-                          value of 'g_number_of_songs'
+                          value of 'g_size'
                           to the number of songs read.
                           Call 'allocateNew()' to allocate 
                           an array of larger size if the 
@@ -76,21 +71,21 @@ void readSongs(string filename){
     string line;
     string song_name, artist_name, genre, dur,junk;
     while(getline(fin,song_name, ':')&&getline(fin,artist_name, '-')&&getline(fin,genre, '-')&&getline(fin,dur, ' ')&&getline(fin,junk)){
-        if(g_number_of_songs == g_curr_size){
+        if(g_size == g_capacity){
             allocateNew();
         }
-        g_song_names[g_number_of_songs]=song_name;
-        g_artist_names[g_number_of_songs]=artist_name;
-        g_genres[g_number_of_songs]=genre;
-        g_song_durations[g_number_of_songs]=stoi(dur);
-        g_number_of_songs++;
+        g_songs[g_size].name=song_name;
+        g_songs[g_size].artist=artist_name;
+        g_songs[g_size].genre=genre;
+        g_songs[g_size].duration=stoi(dur);
+        g_size++;
     }
 }
 
 void printSongs(){
-    for (int i= 0 ; i <g_curr_size;i++){
-        cout<<g_song_names[i]<<"-"<<g_artist_names[i]<<"-"<<g_genres[i]<<"-";
-        cout<<g_song_durations[i];
+    for (int i= 0 ; i <g_capacity;i++){
+        cout<<g_songs[i].name<<"-"<<g_songs[i].artist<<"-"<<g_songs[i].genre<<"-";
+        cout<<g_songs[i].duration;
         cout<<endl;
     }
 }
@@ -121,12 +116,12 @@ void printSongs(){
                   The value of 'count' will be updated to 3 because there
                   are three "HipHop" songs on the playlist 
 */
-string * getGenreSongs(string genre, int &genreCount){
-    string *temp = new string[g_number_of_songs];
+Song * getGenreSongs(string genre, int &genreCount){
+    Song *temp = new Song[g_size];
     genreCount= 0;
-    for(int i = 0; i <g_number_of_songs;i++){
-        if(g_genres[i]==genre){
-            temp[genreCount]=g_song_names[i];
+    for(int i = 0; i <g_size;i++){
+        if(g_songs[i].genre==genre){
+            temp[genreCount]=g_songs[i];
             genreCount++;
         }
     }
@@ -177,23 +172,23 @@ string * getGenreSongs(string genre, int &genreCount){
                   The value of 'equal' will be 2 because there are 2 songs
                   equal to 3 mins duration      
 */
-string * getSongsFromDuration(int duration, int &durationsCount, int filter){
-    string *temp = new string[g_number_of_songs];
+Song * getSongsFromDuration(int duration, int &durationsCount, int filter){
+    Song *temp = new Song[g_size];
     durationsCount = 0;
-    for(int i = 0; i <g_number_of_songs;i++){
+    for(int i = 0; i <g_size;i++){
         if(filter ==0) {
-            if(g_song_durations[i]>duration){
-                temp[durationsCount]=g_song_names[i];
+            if(g_songs[i].duration>duration){
+                temp[durationsCount]=g_songs[i];
                 durationsCount++;
             }        
         } else if(filter ==1) {
-            if(g_song_durations[i]<duration){
-                temp[durationsCount]=g_song_names[i];
+            if(g_songs[i].duration<duration){
+                temp[durationsCount]=g_songs[i];
                 durationsCount++;
             }
         }else{
-            if(g_song_durations[i]==duration){
-                temp[durationsCount]=g_song_names[i];
+            if(g_songs[i].duration==duration){
+                temp[durationsCount]=g_songs[i];
                 durationsCount++;
             }
         }
@@ -225,16 +220,16 @@ string * getSongsFromDuration(int duration, int &durationsCount, int filter){
                   are three unique artists on the playlist     
 */
 string * getUniqueArtists(int &uniqueCount){
-    string* temp =new string[g_number_of_songs];
-    for(int i = 0; i <g_number_of_songs;i++){
+    string* temp =new string[g_size];
+    for(int i = 0; i <g_size;i++){
         bool uniquename = true;
         for(int j =0; j <uniqueCount;j++){
-            if(g_artist_names[i]==temp[j]){
+            if(g_songs[i].artist==temp[j]){
                 uniquename=false;
             }
         }
         if(uniquename){
-            temp[uniqueCount] = g_artist_names[i];
+            temp[uniqueCount] = g_songs[i].artist;
             uniqueCount++;
         }
     }
@@ -256,15 +251,15 @@ string * getUniqueArtists(int &uniqueCount){
                   other artists in the playlist
 */
 string getFavoriteArtist(){
-    if(g_number_of_songs==0){
+    if(g_size==0){
         return "NONE";
     }
     int uniqueNames = 0;
     string* uniqueArtistsList = getUniqueArtists(uniqueNames);
     int artistCount[uniqueNames]= { }; 
-    for(int i = 0; i<g_number_of_songs;i++){
+    for(int i = 0; i<g_size;i++){
         for(int j = 0 ; j<uniqueNames;j++){
-            if(g_artist_names[i]==uniqueArtistsList[j]){
+            if(g_songs[i].artist==uniqueArtistsList[j]){
                 artistCount[j]++;
             }
         }
@@ -278,16 +273,17 @@ string getFavoriteArtist(){
     return uniqueArtistsList[largestIndex];
 }
 
+
 int main(){
     readSongs("example.txt");
     printSongs();
     int count = 0;
-    string* genreSongsTemp = getGenreSongs("Hiphop", count);
+    Song* genreSongsTemp = getGenreSongs("Hiphop", count);
     for (int i = 0; i<count;i++){
-        cout<<genreSongsTemp[i]<<endl;
+        cout<<genreSongsTemp[i].name<<endl;
     }
     int uniqueNames = 0;
-    cout<<g_number_of_songs<<endl;
+    cout<<g_size<<endl;
     string* uniqueArtistsList = getUniqueArtists(uniqueNames);
     for (int i = 0; i<count;i++){
         cout<<uniqueArtistsList[i]<<endl;
